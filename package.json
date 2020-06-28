@@ -1,0 +1,24 @@
+{
+  "name": "reactchatsocket",
+  "version": "1.0.0",
+  "description": "Чат на сокетах для практики",
+  "main": "app.js",
+  "scripts": {
+    "server": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "fluRinji27 <denisov159742@gmail.com>"
+  },
+  "author": "fluRinji",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "concurrency": "^0.1.4",
+    "nodemon": "^2.0.4"
+  }
+}
