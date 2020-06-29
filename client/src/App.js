@@ -1,10 +1,11 @@
 import React from 'react';
-import './App.css';
+import JoinRoom from "./components/JoinRoom/JoinRoom";
+
 
 function App() {
     return (
         <div className="App">
-
+            <JoinRoom/>
         </div>
     );
 }
