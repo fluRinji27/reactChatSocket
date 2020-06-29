@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import socket from "../../hooks/socket.hook";
 import {useHttp} from "../../hooks/http.hook";
 
-const JoinRoom = () => {
+const JoinRoom = ({onLogin}) => {
 
     // Состояние которое хранит в себе номер комнаты
     const [roomId, setRoomId] = useState('');
@@ -12,15 +11,28 @@ const JoinRoom = () => {
 
     // http хук который отправляет запросы на сервер
     const {request} = useHttp();
-    //Асинхронная функция которая при нажатии на кнопку войти отправляет данные
+
+    // Асинхронная функция которая при нажатии на кнопку войти отправляет данные
     const onJoin = async () => {
         try {
-            console.log('data', roomId, userName);
+            // console.log('data', roomId, userName);
+
+            // Обьект который содержит в себе данные пользователя
+            const userData = {
+                roomId,
+                userName
+            };
+
             // Отправка данных на сервер
-            const data = await request('/api/room/join', 'POST', {roomId, userName});
-            console.log('data', data)
+            const data = await request('/api/room/join', 'POST', userData);
+
+            // Вызываем функцию которая подтверждает вход в комнату  и передаем ей данный для входи
+            onLogin(userData);
+
         } catch (e) {
-            throw e || console.log('Ошибка отправки данных.')
+
+            throw e.message || console.log('Ошибка отправки данных.')
+
         }
     };
 
