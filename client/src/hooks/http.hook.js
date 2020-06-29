@@ -15,13 +15,12 @@ export const useHttp = () => {
         try {
             // Приводим body в json формат
             if (body) {
-                console.log('Перед стингифаем', body);
 
                 body = JSON.stringify(body);
 
+                // Оповещаем сервер, о том что отпраляем json
                 headers['Content-Type'] = 'application/json';
 
-                console.log('после стингифаем', body);
             }
             //Делаем запрос
             const res = await fetch(url, {method, body, headers});
