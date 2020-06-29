@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
+const Room = require('./models/Room');
+
 
 //Константа которая получает порт сервера из config
 const PORT = config.get('PORT');
@@ -29,15 +31,54 @@ const start = async () => {
 
         //Прослушиваем каждое подключение
         await io.on('connection', socket => {
-            console.log('Пользователь подключился:', socket.id)
-        });
+                socket.on('ROOM:JOIN', data => {
+
+                    const roomId = data.roomId;
+                    socket.join(roomId);
+                    const userName = data.userName;
+
+                    const users = [{
+                        Name: userName,
+                        socketId: socket.id
+                    }];
+
+                    Room.updateOne({roomId: roomId}, {$push: {users}}, (err, result) => {
+                        if (err) throw err;
+
+                        console.log('данные добавлены')
+                    });
+
+                    Room.find({roomId}).exec((err, result) => {
+                        result.map(user => {
+                            const users = user.get('users');
+                            for (let i = 0; i < users.length; i++) {
+                                console.log(users[i].Name)
+                            }
+                        })
+                    })
+
+
+                });
+                console.log('Пользователь подключился:', socket.id)
+            }
+        );
 
         //Прослушка на порт
         server.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
-    } catch (e) {
+    } catch
+        (e) {
         process.exit(1)
     }
 
 };
 
 start();
+
+
+// .exec((err, result) => {
+//     if (err) throw err;
+//
+//     return result.map((user) => {
+//         return  user.users
+//     })
+// })
