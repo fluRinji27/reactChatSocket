@@ -30,61 +30,101 @@ router.post('/join', async (req, res) => {
         const rooms = await Room.findOne({roomId});
 
         if (rooms) {
+
             console.log('rooms event');
-            getAllUserInRoom(roomId).then(usersArray => {
-                usersArray.map((user, i) => {
-                    if (rooms.roomId === roomId) {
-                        if (user.Name === userName && user.socketId !== socketId || user.Name === userName) {
 
-                            // rooms.updateOne({users}, {$set: {users}}, (err, res) => {
-                            //     if (err) throw err;
-                            //     console.log(res)
-                            // });
+            if (rooms.roomId === roomId) {
 
-                            console.log(rooms);
-                            console.log(`Ид пользователя №${i} устарел!`)
-                            // console.log(`Старый ид ${user.socketId}      новый ид ${socketId}`)
+                for (let i = 0; i < rooms.users.length; i++) {
 
-                        } else if (user.Name === userName) {
-                            console.log('Такой пользователь существет!')
+                    let allUsers = rooms.users;
 
-                        }
+                    if (rooms.users[i].Name === userName && rooms.users[i].socketId !== socketId) {
+
+                        const result = rooms.users.map((user, i) => {
+
+                            console.log(user);
+                            if (user.Name === userName) {
+                                console.log(`Ид пользователя №${i} устарел!`);
+
+                                console.log(`Старый ид ${user.socketId}      новый ид ${socketId}`);
+
+                                return {
+                                    Name: userName,
+                                    socketId: socketId
+                                }
+
+                            }
+
+
+                        });
+
+                        const newUser = result.map((item, i) => {
+                            if (result[i] !== null) {
+                                console.log(result[i]);
+                                return {
+                                    result: result[i],
+                                    index: i
+                                }
+                            }
+                        })
+
+                        allUsers[newUser.index].pop()
+                        allUsers[newUser.index].push(newUser.result)
+
+                        console.log(allUsers)
+
                     }
 
-
-                })
-
-                // for (let i = 0; i < usersArray.length; i++) {
-                //     const cloneUser = usersArray[i];
-                //
-                //     if (usersArray[i].Name !== users[0].Name) {
-                //         console.log(cloneUser)
-                //         Room.findOne({users: cloneUser}, (err, res) => {
-                //             if (err) throw err;
-                //             console.log("user pushed on DB");
-                //
-                //         });
-                //
-                //
-                //         //  Room.findOneAndUpdate({users: cloneUser}, {$push: {users}}, (err, res) => {
-                //         //     if (err) throw err;
-                //         //     console.log("user pushed on DB");
-                //         //     console.log('pushed data', res);
-                //         //
-                //         // });
-                //         return
-                //     }
-                //
-                //     if (usersArray[i].Name === users[0].Name) {
-                //         console.log('ПОЛЬЗОВАТЕЛЬ СУЩЕСТВУЕТ!')
-                //         console.log(cloneUser)
-                //         return
-                //     }
-                //
-                // }
+                    // Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
+                    //         if (err) throw err
+                    //
+                    //         console.log('add new user', res)
+                    //
+                    //     }
+                    // );
 
 
-            })
+                    break
+
+                }
+            }
+
+
+            for (let i = 0; i < rooms.users.length; i++) {
+                if (rooms.users[i].Name !== userName) { // Если пользователя нет, то создаем его в данной комнате
+                    break
+                    let allUsers = rooms.users;
+
+                    console.log('before pushing', allUsers);
+
+                    const newUser = rooms.users.map((user, i) => {
+
+                        const finishNewUser = {
+                            _id: '213213213',
+                            Name: userName,
+                            socketId: socketId
+                        };
+                        return finishNewUser
+                    });
+
+                    allUsers.push(newUser[0]);
+
+                    console.log('after pushing', allUsers);
+
+                    console.log('PRE-SEND DATA NEW USER', allUsers);
+
+                    Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
+                            if (err) throw err;
+
+                            console.log('add new user', res)
+
+                        }
+                    );
+                    break
+
+                }
+            }
 
 
             res.status(200).json({message: "Вход в комнату выполнен"})
