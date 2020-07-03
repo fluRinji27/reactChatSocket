@@ -4,7 +4,7 @@ import './style.css'
 import {useHttp} from "../../hooks/http.hook";
 
 
-const Chat = ({users, messages, userName, roomId}) => {
+const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
     const [textArea, setTextArea] = useState('');
 
     const onSendMessage = () => {
@@ -12,7 +12,15 @@ const Chat = ({users, messages, userName, roomId}) => {
             roomId,
             userName,
             text: textArea
-        })
+        });
+
+        onAddMessages({
+            roomId,
+            userName,
+            text: textArea
+        });
+
+        setTextArea('')
     };
 
     return (

@@ -44,23 +44,25 @@ function App() {
         );
     };
 
+    const addMessage = messages => {
+        dispatch({
+            type: 'NEW_MESSAGE',
+            payload: messages
+        })
+    }
+
     useEffect(() => {
         // Фиксируем вход пользователя в комнату
         socket.on('ROOM:SET_USERS', setUsers);
-        socket.on('ROOM:NEW_MESSAGE', messages => {
-            console.log('messages', messages)
-            dispatch({
-                type: 'NEW_MESSAGE',
-                payload: messages
-            })
-        })
+        socket.on('ROOM:NEW_MESSAGE', addMessage)
     }, []);
 
     console.log(state.messages)
 
     return (
         <div className="App">
-            {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> : <Chat {...state}/>}
+            {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> :
+                <Chat {...state} onAddMessages={addMessage}/>}
 
         </div>
     );
