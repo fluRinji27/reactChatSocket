@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
-const Room = require('./models/Room');
 
 //Константа которая получает порт сервера из config
 const PORT = config.get('PORT');
@@ -11,6 +10,7 @@ const PORT = config.get('PORT');
 const app = express();
 
 app.use(express.json({extended: true}));
+app.use(express.urlencoded({extended: true}));
 app.use('/api/room', require('./routes/room.routes'));
 
 //Инициализируем http сервер для сокетов
@@ -19,7 +19,7 @@ const server = require('http').Server(app);
 //Инициализируем сокеты
 const io = socket(server);
 
-
+let rooms = new Map();
 const start = async () => {
     try {
         //Подключаемся к бае данных
@@ -33,7 +33,7 @@ const start = async () => {
 
         await io.on('connection', socket => {
             let socketUserData;
-            let users = [];
+            // Подключение сокета к комнате
                 socket.on('ROOM:JOIN', data => {
                         console.log("ROOM:JOIN");
 
@@ -42,34 +42,58 @@ const start = async () => {
 
                         socketUserData = data;
 
-                        users.push(userName);
+                    if (!rooms.has(roomId)) {
+                        rooms.set(roomId, new Map([
+                            ['users', new Map()],
+                            ['messages', []]
+                        ]))
+                    }
+
+                    // Создаем комнату в сокетах
                         socket.join(roomId);
 
-                        console.log(users);
+                    rooms.get(roomId).get('users').set(socket.id, userName)
 
-                        socket.to(roomId).emit('ROOM:JOINED', users)
+                    const users = [...rooms.get(roomId).get('users').values()];
+
+                    // Оповещаем клиент о входе пользователя
+                    socket.to(roomId).broadcast.emit('ROOM:SET_USERS', users);
 
                         console.log('user connected', socket.id)
                     }
                 );
 
-
-            socket.on('disconnecting', () => {
-                if (socketUserData) {
-                    const userDisconnected = users.find(user => user === socketUserData.userName);
-                    users.pop(userDisconnected)
-                    console.log('User socket disconnect', socketUserData, users)
-
+            // Получение сообщения
+            socket.on('ROOM:NEW_MESSAGE', ({roomId, userName, text}) => {
+                const obj = {
+                    userName,
+                    text
                 }
 
+                rooms.get(roomId).get('messages').push(obj)
+
+                socket.to(roomId).broadcast.emit('ROOM:NEW_MESSAGE', obj)
+            })
+
+            // Отключения сокета
+            socket.on('disconnecting', () => {
+
+                rooms.forEach((value, roomId) => {
+                    if (value.get('users').delete(socket.id)) {
+                        const users = [...rooms.get(roomId).get('users').values()];
+                        socket.to(socketUserData.roomId).broadcast.emit('ROOM:SET_USERS', users)
+                    }
+                })
 
             })
 
             }
         );
 
+
         //Прослушка на порт
         server.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
+
 
     } catch
         (e) {
@@ -80,48 +104,4 @@ const start = async () => {
 
 start();
 
-
-// Room.findOneAndUpdate(
-//     {
-//         $and: [
-//             {roomId: roomId, users: [{Name: userName}]}
-//         ]
-//     }, {
-//         $set: {
-//             users: [{
-//                 Name: userName,
-//                 socketId: socket.id
-//             }]
-//         }
-//     }, (err, result) => {
-//         if (err) throw err
-//         console.log('Данные изменены', result);
-//         return
-//     }
-// );
-
-
-// for (let i = 0; i < usersArray.length; i++) {
-//     if (userName === usersArray[i].Name) {
-//         console.log('Пользователь существует!', usersArray[i].Name);
-//         console.log('userName ', userName);
-//         console.log('roomId ', roomId);
-//
-//         Room.findOne(
-//             {roomId: roomId}, (err, res) => {
-//                 if (res === null || err) throw err;
-//                 console.log('user name', res.users[i].Name);
-//             })
-//     } else {
-//         const users = [{
-//             Name: userName,
-//             socketId: socket.id
-//         }];
-//
-//         Room.updateOne({roomId: roomId}, {$push: {users}}, (err, result) => {
-//             if (err) throw err;
-//
-//             console.log('данные добавлены');
-//         });
-//     }
-// }
+module.exports.rooms = rooms
