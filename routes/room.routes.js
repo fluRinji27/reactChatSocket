@@ -27,11 +27,12 @@ router.post('/join', async (req, res) => {
             socketId: socketId
         }];
 
+
         const rooms = await Room.findOne({roomId});
+
 
         if (rooms) {
 
-            console.log('rooms event');
 
             if (rooms.roomId === roomId) {
 
@@ -39,69 +40,40 @@ router.post('/join', async (req, res) => {
 
                 for (let i = 0; i < rooms.users.length; i++) {
 
-
                     if (rooms.users[i].Name === userName && rooms.users[i].socketId !== socketId) {
 
+                        //Ищем пользователя в комнате по имени и присваиваем ноывй сокет ид
                         let findUser = allUsers.find(user => user.Name === userName);
                         findUser.socketId = socketId;
 
-                        console.log(findUser);
-
+                        // Создаем новуы объект с внесенными изменениями
                         let newUser = allUsers.find(user => user.Name === findUser.Name);
 
                         if (allUsers[i].name === newUser.Name) {
+
                             allUsers[i].push(newUser)
+
                         }
 
                     }
 
+                    const findEdentUser = allUsers.find(user => user.Name === userName);
+
+                    if (!findEdentUser) {
+
+                        const newUser = {
+                            Name: userName,
+                            socketId: socketId
+                        };
+
+                        allUsers.push(newUser)
+                    }
+
                 }
 
-
+                // Добавляем изменения в базу
                 Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
                         if (err) throw err;
-
-                        console.log('add new user', res)
-
-                    }
-                );
-            }
-
-            if (rooms.roomId === roomId) {
-
-                let allUsers = rooms.users;
-
-                for (let i = 0; i < rooms.users.length; i++) {
-
-                    if (rooms.users[i].Name !== userName) { // Если пользователя нет, то создаем его в данной комнате
-
-
-                        console.log('before pushing', allUsers);
-
-                        const newUser = rooms.users.map((user, i) => {
-
-                            const finishNewUser = {
-                                _id: '213213213',
-                                Name: userName,
-                                socketId: socketId
-                            };
-                            return finishNewUser
-                        });
-
-                        allUsers.push(newUser[0]);
-
-                        console.log('after pushing', allUsers);
-
-                        console.log('PRE-SEND DATA NEW USER', allUsers);
-
-
-                    }
-                }
-                Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
-                        if (err) throw err;
-
-                        console.log('add new user', res)
-
                     }
                 );
             }
