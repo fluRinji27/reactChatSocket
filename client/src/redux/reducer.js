@@ -6,6 +6,17 @@ export default (state, action) => {
                 Joined: true,
                 roomId: action.payload.roomId,
                 userName: action.payload.userName,
+                socketId: action.payload.socketId,
+            };
+        case 'SET_USERS':
+            return {
+                ...state,
+                users: action.payload
+            };
+        case 'SET_MESSAGES':
+            return {
+                ...state,
+                messages: action.payload
             };
 
         default:
