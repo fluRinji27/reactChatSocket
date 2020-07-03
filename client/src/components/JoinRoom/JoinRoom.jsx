@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useHttp} from "../../hooks/http.hook";
 
-const JoinRoom = ({onLogin}) => {
+const JoinRoom = ({onLogin, socket}) => {
 
     // Состояние которое хранит в себе номер комнаты
     const [roomId, setRoomId] = useState('');
@@ -9,28 +9,37 @@ const JoinRoom = ({onLogin}) => {
     // Состояние которое хранит в себе имя пользователя
     const [userName, setUserName] = useState('');
 
+    const [isLoading, setLoading] = useState(false);
+
     // http хук который отправляет запросы на сервер
     const {request} = useHttp();
 
     // Асинхронная функция которая при нажатии на кнопку войти отправляет данные
     const onJoin = async () => {
+        setLoading(true)
         try {
-            // console.log('data', roomId, userName);
+
+            // Получаем id сокет соединения
+            let socketId = socket.id;
 
             // Обьект который содержит в себе данные пользователя
             const userData = {
                 roomId,
-                userName
+                userName,
+                socketId
             };
+
+            console.log('user data JoinRoom', userData)
 
             // Отправка данных на сервер
             const data = await request('/api/room/join', 'POST', userData);
 
-            // Вызываем функцию которая подтверждает вход в комнату  и передаем ей данный для входи
+            // Вызываем функцию которая подтверждает вход в комнату  и передаем ей данный для входа
             onLogin(userData);
 
-        } catch (e) {
 
+        } catch (e) {
+            setLoading(false)
             throw e.message || console.log('Ошибка отправки данных.')
 
         }
@@ -54,7 +63,7 @@ const JoinRoom = ({onLogin}) => {
                        }
                    }
             />
-            <button onClick={onJoin}>Войти</button>
+            <button disabled={isLoading} onClick={onJoin}>{isLoading ? 'Вход...' : 'Войти'}</button>
         </div>
     )
 };
