@@ -5,8 +5,8 @@ const schema = new Schema({
     users: [{
         Name: String,
         socketId: String
-    }]
-    // messages: {type: Array}
+    }],
+    messages: {type: Array}
 
 });
 
