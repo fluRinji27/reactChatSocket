@@ -8,48 +8,33 @@ export const useHttp = () => {
 
     // оболочка для более удобной работы с запросами
     const request = useCallback(async (url, method = 'GET', body = null, headers = {}) => {
-
         // Начинаем загрузку
         setLoading(true);
-
         try {
             // Приводим body в json формат
             if (body) {
-
                 body = JSON.stringify(body);
-
                 // Оповещаем сервер, о том что отпраляем json
                 headers['Content-Type'] = 'application/json';
-
             }
             //Делаем запрос
             const res = await fetch(url, {method, body, headers});
-
             //Обрабатываем запрос
             const data = await res.json();
-
             //Если в response ошибка, то выводим её
             if (!res.ok) {
-
                 // Заканчиваем загрузку
                 setLoading(false);
-
                 throw new Error(data.message || 'Что-то пошло не так...')
             }
-
-
             // Заканчиваем загрузку
             setLoading(false);
-
             return data
-
         } catch (e) {
             // Заканчиваем загрузку
             setLoading(false);
-
             // Определяем ошибку
             setError(e.message);
-
             throw e
         }
     }, []);

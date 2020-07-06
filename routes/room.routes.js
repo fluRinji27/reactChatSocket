@@ -85,19 +85,54 @@ router.post('/join', async (req, res) => {
     }
 });
 
+router.post('/sendMessage', async (req, res) => {
+    try {
+        // Создаем новую комнату и добавляем пользователя
+
+        // Получаем данные от клиента
+        const {roomId, userName, text} = req.body;
+        const rooms = await Room.findOne({roomId});
+        console.log(rooms)
+        // Елт комната существует, то мы проводим в ней операции
+        if (rooms) {
+            console.log("Комната найдена!")
+            let allMessages = rooms.messages;
+
+            console.log('allMessages ', allMessages)
+
+            let newMessage = {
+                Name: userName,
+                text: text
+            }
+
+            allMessages.push(newMessage)
+
+            // // Добавляем изменения в базу
+            await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {
+                if (err) throw new Error(err)
+            })
+        }
+
+
+        res.status(201).json({message: "Сообщение Добавленно в базу!"});
+
+    } catch (e) {
+        throw new Error(e)
+    }
+});
+
 router.get('/join/:id', async (req, res) => {
-    const {id: roomId} = req.params
+    const {id: roomId} = req.params;
+
     const obj = app.rooms.has(roomId) ? {
         users: [...app.rooms.get(roomId).get('users').values()],
         messages: [...app.rooms.get(roomId).get('messages').values()]
-    } : {users: [], messages: []}
-    //
-    // const repeatUsers = app.users.some((users) => users === app.users)
-    //
-    // if (repeatUsers) res.status(500)
+    } : {users: [], messages: []};
+
     console.log(obj)
     res.json(obj)
 
 });
+
 
 module.exports = router;

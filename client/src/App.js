@@ -8,7 +8,9 @@ import {useHttp} from "./hooks/http.hook";
 
 
 function App() {
+
     const {request} = useHttp();
+
     const [state, dispatch] = useReducer(reducer, {
         Joined: false,
         roomId: null,
@@ -18,38 +20,57 @@ function App() {
         messages: []
 
     });
+
+    const [allMessages, setAllMessages] = useState([])
+
     const onLogin = async (userData) => {
-        dispatch({
-            type: 'JOINED',
-            payload: userData
-        });
+        try {
+            dispatch({
+                type: 'JOINED',
+                payload: userData
+            });
 
-        // Отправяем по сокета данные о попытке входа в комнате
-        socket.emit('ROOM:JOIN', userData);
+            // Отправяем по сокета данные о попытке входа в комнате
+            socket.emit('ROOM:JOIN', userData);
 
-        // Получаем массив пользвателей который находятся в комнате
-        const data = await request(`/api/room/join/${userData.roomId}`, 'GET');
+            // Получаем массив пользвателей который находятся в комнате
+            const data = await request(`/api/room/join/${userData.roomId}`, 'GET').then(serverData => {
+                setUsers(serverData.users)
+                console.log('app user data', serverData)
+            })
 
-        // Заносим пользователей в стейт
-        setUsers(data.users)
+            console.log('STATE', state)
+
+
+        } catch (e) {
+            throw new Error(e)
+        }
 
 
     };
-    // Заносим пользователей в стейт
+
+    // Добавляем пользователей в стейт
     const setUsers = users => {
         dispatch({
                 type: 'SET_USERS',
                 payload: users
             }
         );
+        console.log('USER ADD TO STATE', state.users)
     };
-
+    // Добавляем сообщения в стейт
     const addMessage = messages => {
+        setAllMessages([...state.messages, messages])
+
         dispatch({
             type: 'NEW_MESSAGE',
             payload: messages
         })
+        console.log('MESSAGE ADD TO STATE', state.messages)
     }
+
+
+// console.log(state.messages)
 
     useEffect(() => {
         // Фиксируем вход пользователя в комнату
@@ -57,12 +78,12 @@ function App() {
         socket.on('ROOM:NEW_MESSAGE', addMessage)
     }, []);
 
-    console.log(state.messages)
-
     return (
         <div className="App">
+
             {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> :
-                <Chat {...state} onAddMessages={addMessage}/>}
+
+                <Chat {...state} allMessages={allMessages} onAddMessages={addMessage}/>}
 
         </div>
     );

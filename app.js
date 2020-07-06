@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
 
@@ -22,71 +21,55 @@ const io = socket(server);
 let rooms = new Map();
 const start = async () => {
     try {
-        //Подключаемся к бае данных
-        await mongoose.connect(config.get('mongoUri'), {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false
-        });
-        //Прослушиваем каждое подключение
-
+        // Подключаемся к сокетам
         await io.on('connection', socket => {
             let socketUserData;
-            // Подключение сокета к комнате
+            // Подключение пользователя к комнате
                 socket.on('ROOM:JOIN', data => {
-                        console.log("ROOM:JOIN");
 
                         const roomId = data.roomId;
                         const userName = data.userName;
 
                         socketUserData = data;
-
+                    // Если комнаты с введеным id не существут, то создадим новую
                     if (!rooms.has(roomId)) {
                         rooms.set(roomId, new Map([
                             ['users', new Map()],
                             ['messages', []]
                         ]))
                     }
-
                     // Создаем комнату в сокетах
                         socket.join(roomId);
-
+                    // В созданную комнату вносим данные пользователя
                     rooms.get(roomId).get('users').set(socket.id, userName)
-
+                    // Получаем внесенные данные
                     const users = [...rooms.get(roomId).get('users').values()];
-
                     // Оповещаем клиент о входе пользователя
                     socket.to(roomId).broadcast.emit('ROOM:SET_USERS', users);
-
-                        console.log('user connected', socket.id)
                     }
                 );
-
             // Получение сообщения
             socket.on('ROOM:NEW_MESSAGE', ({roomId, userName, text}) => {
                 const obj = {
                     userName,
                     text
-                }
-
-                rooms.get(roomId).get('messages').push(obj)
-
+                };
+                // В объект rooms пушим в масив сообщений сообщение
+                rooms.get(roomId).get('messages').push(obj);
+                // Оповещаем клиент о сообщении
                 socket.to(roomId).broadcast.emit('ROOM:NEW_MESSAGE', obj)
-            })
-
-            // Отключения сокета
+            });
+            // Отключения клиента
             socket.on('disconnecting', () => {
-
+                // При отключении клиента удаляем его из комнаты
                 rooms.forEach((value, roomId) => {
                     if (value.get('users').delete(socket.id)) {
                         const users = [...rooms.get(roomId).get('users').values()];
+                        // Повоещаем клиет о новом кол-во пользователей
                         socket.to(socketUserData.roomId).broadcast.emit('ROOM:SET_USERS', users)
                     }
                 })
-
             })
-
             }
         );
 

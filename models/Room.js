@@ -6,7 +6,10 @@ const schema = new Schema({
         Name: String,
         socketId: String
     }],
-    messages: {type: Array}
+    messages: [{
+        Name: String,
+        text: String
+    }]
 
 });
 
