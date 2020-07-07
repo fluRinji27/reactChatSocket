@@ -4,8 +4,11 @@
   "description": "Чат на сокетах для практики",
   "main": "app.js",
   "scripts": {
+    "start": "cross-env NODE_ENV=production node app.js",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
+    "client:install": "npm install --prefix client",
+    "client:build": "npm run build --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
@@ -15,6 +18,7 @@
   "author": "fluRinji",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.2",
     "config": "^3.3.1",
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
