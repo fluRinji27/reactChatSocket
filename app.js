@@ -1,6 +1,7 @@
 const express = require('express');
 const socket = require('socket.io');
 const config = require('config');
+const path = require('path');
 
 //Константа которая получает порт сервера из config
 const PORT = config.get('PORT');
@@ -11,6 +12,14 @@ const app = express();
 app.use(express.json({extended: true}));
 app.use(express.urlencoded({extended: true}));
 app.use('/api/room', require('./routes/room.routes'));
+
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static(__dirname, 'client', build))
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirnmae, 'client', 'build', 'index.html'))
+    })
+}
 
 //Инициализируем http сервер для сокетов
 const server = require('http').Server(app);
