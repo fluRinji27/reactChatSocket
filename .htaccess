@@ -1,0 +1,3 @@
+<IfModule mod_headers.c>
+  Header set Content-Security-Policy "default-src 'self'; script-src *.google-analytics.com 'self'; object-src 'self'; style-src 'self'; img-src *; frame-src 'self'"
+</IfModule>
