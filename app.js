@@ -15,16 +15,16 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/room', require('./routes/room.routes'));
 
 if (process.env.NODE_ENV === 'production') {
-    app.use('/', express.static(__dirname + '/client/build/'));
+    app.use('/', express.static(__dirname, 'client', 'build'));
 
-    app.get('*', (req, res) => {
+    app.get('/', (req, res) => {
         console.log('Get index html');
-        res.sendFile(path.resolve(__dirname + '/client/build/index.html'))
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     })
 }
 
 //Инициализируем http сервер для сокетов
-const server = require('https').Server(app);
+const server = require('http').Server(app);
 
 //Инициализируем сокеты
 const io = socket(server);
@@ -93,7 +93,6 @@ const start = async () => {
 
 
         //Прослушка на порт
-        console.log(process.env.PORT)
         server.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
 
 
@@ -103,6 +102,10 @@ const start = async () => {
     }
 
 };
+app.get('/', (req, res) => {
+    console.log('Get index html');
+    res.sendFile(path.resolve(__dirname + '/client/build/index.html'))
+})
 
 start();
 
