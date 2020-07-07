@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {useHttp} from "../../hooks/http.hook";
 
+import "./style.css"
+
 const JoinRoom = ({onLogin, socket}) => {
 
     // Состояние которое хранит в себе номер комнаты
@@ -46,24 +48,23 @@ const JoinRoom = ({onLogin, socket}) => {
     };
 
     return (
-        <div className="joinMenu">
-            <input type="text"
-                   placeholder='Номер комнаты'
-                   value={roomId}
-                   onChange={
-                       e => setRoomId(e.target.value)
-                   }
-            />
-            <input type="text"
-                   placeholder='Имя пользователя'
-                   value={userName}
-                   onChange={
-                       e => {
-                           setUserName(e.target.value)
-                       }
-                   }
-            />
-            <button disabled={isLoading} onClick={onJoin}>{isLoading ? 'Вход...' : 'Войти'}</button>
+        <div className="login-page">
+            <div className="form">
+                <div className="login-form">
+                    <input type="text" placeholder='Номер комнаты'
+                           value={roomId}
+                           onChange={
+                               e => setRoomId(e.target.value)
+                           }/>
+                    <input type="text" placeholder='Имя пользователя'
+                           onChange={
+                               e => {
+                                   setUserName(e.target.value)
+                               }
+                           }/>
+                    <button disabled={isLoading} onClick={onJoin}>{isLoading ? 'Вход...' : 'Войти'}</button>
+                </div>
+            </div>
         </div>
     )
 };
