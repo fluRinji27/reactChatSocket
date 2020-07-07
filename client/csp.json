@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "default-src": [
+      "'self'"
+    ],
+    "style-src": [
+      "'self'",
+      "'unsafe-eval'"
+    ],
+    "script-src": [
+      "'self",
+      "'unsafe-eval'",
+      "'unsafe-inline'"
+    ]
+  },
+  "prod": {
+    "default-src": "'self'",
+    "style-src": [
+      "'self'"
+    ],
+    "connect-src": [
+      "'self'"
+    ]
+  }
+}
