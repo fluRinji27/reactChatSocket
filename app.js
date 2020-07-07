@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(__dirname, 'client', 'build'))
 
     app.get('*', (req, res) => {
+        res.headers('Content-Security-Policy: script-src 'unsafe-inline';')
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     })
 }
