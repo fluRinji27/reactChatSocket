@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(__dirname, 'client', 'build'));
 
     app.get('*', (req, res) => {
+        console.log('Get index html')
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     })
 }
@@ -35,7 +36,7 @@ const start = async () => {
             let socketUserData;
             // Подключение пользователя к комнате
                 socket.on('ROOM:JOIN', data => {
-
+                    console.log('user connect', socket.id)
                         const roomId = data.roomId;
                         const userName = data.userName;
 
