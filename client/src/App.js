@@ -32,7 +32,7 @@ function App() {
 
             // Отправяем по сокета данные о попытке входа в комнате
             socket.emit('ROOM:JOIN', userData);
-
+            console.log('ROOM:JOIN', userData)
             // Получаем массив пользвателей который находятся в комнате
             const data = await request(`/api/room/join/${userData.roomId}`, 'GET').then(serverData => {
                 setUsers(serverData.users)

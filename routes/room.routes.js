@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const router = Router();
-const Room = require('../models/Room');
+// const Room = require('../models/Room');
 const app = require('../app');
 
 // api/room/join
@@ -64,10 +64,10 @@ router.post('/join', async (req, res) => {
                 }
 
                 // Добавляем изменения в базу
-                Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
-                        if (err) throw err;
-                    }
-                );
+                // Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
+                //         if (err) throw err;
+                //     }
+                // );
             }
 
 
@@ -108,9 +108,9 @@ router.post('/sendMessage', async (req, res) => {
             allMessages.push(newMessage)
 
             // // Добавляем изменения в базу
-            await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {
-                if (err) throw new Error(err)
-            })
+            // await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {
+            //     if (err) throw new Error(err)
+            // })
         }
 
 
