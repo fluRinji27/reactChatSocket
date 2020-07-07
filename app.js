@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 
     app.get('*', (req, res) => {
         console.log('Get index html');
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+        res.sendFile(path.resolve(__dirname + '/client/build/index.html'))
     })
 }
 
