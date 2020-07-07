@@ -103,9 +103,9 @@ router.post('/sendMessage', async (req, res) => {
             let newMessage = {
                 Name: userName,
                 text: text
-            }
+            };
 
-            allMessages.push(newMessage)
+            allMessages.push(newMessage);
 
             // Добавляем изменения в базу
             await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {

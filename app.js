@@ -45,8 +45,8 @@ const start = async () => {
             // Подключение пользователя к комнате
                 socket.on('ROOM:JOIN', data => {
                     console.log('user connect', socket.id)
-                    const roomId = data.room
-                        const userName = data.userName;
+                    const roomId = data.roomId
+                    const userName = data.userName;
 
                         socketUserData = data;
                     // Если комнаты с введеным id не существут, то создадим новую
