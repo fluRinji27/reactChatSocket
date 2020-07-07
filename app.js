@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //Инициализируем http сервер для сокетов
-const server = require('http').Server(app);
+const server = require('https').Server(app);
 
 //Инициализируем сокеты
 const io = socket(server);
@@ -93,6 +93,7 @@ const start = async () => {
 
 
         //Прослушка на порт
+        console.log(process.env.PORT)
         server.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
 
 
