@@ -1,5 +1,8 @@
 addDefaultCharset UTF-8
-#AddType 'text/css; charset=UTF-8' css
+AddType 'text/css; css
+AddType 'text/javascript; js
+AddType 'text//html; html
+
 
 <IfModule mod_mime.c>
     AddType text/css .css
