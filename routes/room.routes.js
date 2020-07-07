@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const router = Router();
-// const Room = require('../models/Room');
+const Room = require('../models/Room');
 const app = require('../app');
 
 // api/room/join
@@ -52,7 +52,7 @@ router.post('/join', async (req, res) => {
 
                     // Если такого имени нету, то создаем объект с новым пользователем и добавляем его в массив пользователей
                     if (!findEdentUser) {
-
+                        console.log('create user obj')
                         const newUser = {
                             Name: userName,
                             socketId: socketId
@@ -64,13 +64,13 @@ router.post('/join', async (req, res) => {
                 }
 
                 // Добавляем изменения в базу
-                // Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
-                //         if (err) throw err;
-                //     }
-                // );
+                Room.findOneAndUpdate({roomId: roomId}, {$set: {users: allUsers}}, (err, res) => {
+                        if (err) throw err;
+                    }
+                );
             }
 
-
+            console.log('pre status send')
             res.status(200).json({message: "Вход в комнату выполнен"})
         }
 
@@ -107,10 +107,10 @@ router.post('/sendMessage', async (req, res) => {
 
             allMessages.push(newMessage)
 
-            // // Добавляем изменения в базу
-            // await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {
-            //     if (err) throw new Error(err)
-            // })
+            // Добавляем изменения в базу
+            await Room.findOneAndUpdate({roomId: roomId}, {$set: {messages: allMessages}}, (err, res) => {
+                if (err) throw new Error(err)
+            })
         }
 
 

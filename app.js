@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
 const path = require('path');
@@ -31,13 +32,20 @@ const io = socket(server);
 let rooms = new Map();
 const start = async () => {
     try {
+        //Подключаемся к бае данных
+        await mongoose.connect(config.get('mongoUri'), {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        });
         // Подключаемся к сокетам
         await io.on('connection', socket => {
             let socketUserData;
             // Подключение пользователя к комнате
                 socket.on('ROOM:JOIN', data => {
                     console.log('user connect', socket.id)
-                        const roomId = data.roomId;
+                    const roomId = data.room
                         const userName = data.userName;
 
                         socketUserData = data;
