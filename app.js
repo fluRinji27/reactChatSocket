@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirnmae, 'client', 'build', 'index.html'))
     })
 }
+;
 
 //Инициализируем http сервер для сокетов
 const server = require('http').Server(app);
