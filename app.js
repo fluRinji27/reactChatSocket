@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/room', require('./routes/room.routes'));
 
 if (process.env.NODE_ENV === 'production') {
+    app.disable('x-powered-by');
     app.use('/', express.static(path.join(__dirname) + '/client/build/'));
 
     app.get('*', (req, res) => {
