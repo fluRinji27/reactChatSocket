@@ -16,7 +16,13 @@
   "prod": {
     "default-src": "'self'",
     "style-src": [
-      "'self'"
+      "'self'",
+      "'unsafe-eval'"
+    ],
+    "script-src": [
+      "'self",
+      "'unsafe-eval'",
+      "'unsafe-inline'"
     ],
     "connect-src": [
       "'self'"
