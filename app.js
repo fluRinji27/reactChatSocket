@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
+const morgan = require('morgan')
 const path = require('path');
 
 //Константа которая получает порт сервера из config
-const PORT = config.get('PORT');
+const PORT = process.env.PORT || config.get('PORT') || 5000;
 
 //Инициализируем константу нашего сервера
 const app = express();
@@ -16,12 +17,13 @@ app.use('/api/room', require('./routes/room.routes'));
 
 if (process.env.NODE_ENV === 'production') {
     app.disable('x-powered-by');
-    app.use('/', express.static(path.join(__dirname) + '/client/build/'));
+    app.use(morgan('common'));
+
+    app.use(express.static(path.resolve(__dirname, 'client', 'build')));
 
     app.get('*', (req, res) => {
         console.log('Get index html');
-        console.log(path.resolve(__dirname + '/client/build/index.html'))
-        res.sendFile(path.resolve(__dirname + '/client/build/index.html'))
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     })
 }
 
