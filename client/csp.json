@@ -8,24 +8,26 @@
       "'unsafe-eval'"
     ],
     "script-src": [
-      "'self",
       "'unsafe-eval'",
       "'unsafe-inline'"
     ]
   },
   "prod": {
-    "default-src": "'self'",
+    "default-src": "*",
     "style-src": [
       "'self'",
-      "'unsafe-eval'"
+      "'unsafe-inline'"
     ],
     "script-src": [
-      "'self",
+      "'self'",
+      "'unsafe-inline'",
       "'unsafe-eval'",
-      "'unsafe-inline'"
+      "http://flurinji.ru"
     ],
     "connect-src": [
       "'self'"
     ]
   }
 }
+
+
