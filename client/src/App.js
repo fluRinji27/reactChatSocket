@@ -6,6 +6,9 @@ import reducer from "./redux/reducer";
 import socket from "./hooks/socket.hook";
 import {useHttp} from "./hooks/http.hook";
 
+import "materialize-css";
+
+
 
 function App() {
 
@@ -25,6 +28,8 @@ function App() {
 
     const onLogin = async (userData) => {
         try {
+
+            // Доабвляем в стейт данные о пользователе
             dispatch({
                 type: 'JOINED',
                 payload: userData
@@ -32,18 +37,16 @@ function App() {
 
             // Отправяем по сокета данные о попытке входа в комнате
             socket.emit('ROOM:JOIN', userData);
-            console.log('ROOM:JOIN', userData)
+
             // Получаем массив пользвателей который находятся в комнате
             const data = await request(`/api/room/join/${userData.roomId}`, 'GET').then(serverData => {
                 setUsers(serverData.users)
-                console.log('app user data', serverData)
-            })
 
-            console.log('STATE', state)
+            });
 
 
         } catch (e) {
-            throw new Error(e)
+            // throw new Error(e) || console.log('Ошибка входа в комнату!')
         }
 
 
@@ -56,8 +59,8 @@ function App() {
                 payload: users
             }
         );
-        console.log('USER ADD TO STATE', state.users)
     };
+
     // Добавляем сообщения в стейт
     const addMessage = messages => {
         setAllMessages([...state.messages, messages])
@@ -66,11 +69,7 @@ function App() {
             type: 'NEW_MESSAGE',
             payload: messages
         })
-        console.log('MESSAGE ADD TO STATE', state.messages)
     }
-
-
-// console.log(state.messages)
 
     useEffect(() => {
         // Фиксируем вход пользователя в комнату
@@ -83,10 +82,11 @@ function App() {
 
             {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> :
 
-                <Chat {...state} allMessages={allMessages} onAddMessages={addMessage}/>}
+                <Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>}
 
         </div>
     );
 }
 
+// {/**/}
 export default App;
