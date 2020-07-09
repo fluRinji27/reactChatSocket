@@ -15,16 +15,7 @@ app.use(express.json({extended: true}));
 app.use(express.urlencoded({extended: true}));
 app.use('/api/room', require('./routes/room.routes'));
 
-if (process.env.NODE_ENV === 'production') {
-    app.disable('x-powered-by');
-    app.use(morgan('common'));
 
-    app.use('/', express.static(path.resolve(__dirname, 'client', 'build')));
-
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-    })
-}
 
 //Инициализируем http сервер для сокетов
 const server = require('http').Server(app);
