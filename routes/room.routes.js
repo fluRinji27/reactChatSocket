@@ -1,13 +1,25 @@
 const {Router} = require('express');
-const router = Router();
+const {check, validationResult} = require('express-validator')
 const Room = require('../models/Room');
 const app = require('../app');
 
+const router = Router();
+
 // api/room/join
-router.post('/join', async (req, res) => {
+router.post('/join', [
+    check('roomId', 'Введите название комнаты!').isLength({min: 1, max: 6}),
+    check('userName', 'Введите имя пользователя!').isLength({min: 1, max: 10})
+], async (req, res) => {
     try {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors: errors.array(),
+                message: 'Некорректные данные!'
+            })
+        }
         // Создаем новую комнату и добавляем пользователя
-        console.log(req.body)
 
         // Получаем данные от клиента
         const {roomId, userName, socketId} = req.body;
@@ -52,7 +64,6 @@ router.post('/join', async (req, res) => {
 
                     // Если такого имени нету, то создаем объект с новым пользователем и добавляем его в массив пользователей
                     if (!findEdentUser) {
-                        console.log('create user obj')
                         const newUser = {
                             Name: userName,
                             socketId: socketId
@@ -70,7 +81,6 @@ router.post('/join', async (req, res) => {
                 );
             }
 
-            console.log('pre status send')
             res.status(200).json({message: "Вход в комнату выполнен"})
         }
 
@@ -92,13 +102,10 @@ router.post('/sendMessage', async (req, res) => {
         // Получаем данные от клиента
         const {roomId, userName, text} = req.body;
         const rooms = await Room.findOne({roomId});
-        console.log(rooms)
         // Елт комната существует, то мы проводим в ней операции
         if (rooms) {
-            console.log("Комната найдена!")
             let allMessages = rooms.messages;
 
-            console.log('allMessages ', allMessages)
 
             let newMessage = {
                 Name: userName,
@@ -129,7 +136,6 @@ router.get('/join/:id', async (req, res) => {
         messages: [...app.rooms.get(roomId).get('messages').values()]
     } : {users: [], messages: []};
 
-    console.log(obj)
     res.json(obj)
 
 });
