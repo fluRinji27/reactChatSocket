@@ -6,7 +6,6 @@ const morgan = require('morgan')
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
-
 //Константа которая получает порт сервера из config
 const PORT = process.env.PORT || config.get('PORT') || 5000;
 
@@ -14,8 +13,6 @@ const ssl = {
     key: fs.readFileSync('./ssl/privateKey.key'),
     cert: fs.readFileSync('./ssl/certificate.crt')
 };
-
-
 //Инициализируем константу нашего сервера
 const app = express();
 
@@ -105,7 +102,7 @@ const start = async () => {
 
 
         //Прослушка на порт
-        httpsServer.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
+        httpsServer.listen(PORT, () => console.log('Server https has ben started on port: ', PORT));
 
 
     } catch
