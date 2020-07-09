@@ -23,8 +23,6 @@ export const useHttp = () => {
             const data = await res.json();
             //Если в response ошибка, то выводим её
             if (!res.ok) {
-                // Заканчиваем загрузку
-                setLoading(false);
                 throw new Error(data.message || 'Что-то пошло не так...')
             }
             // Заканчиваем загрузку
@@ -38,5 +36,7 @@ export const useHttp = () => {
             throw e
         }
     }, []);
-    return {loading, error, request}
+
+    const clearError = useCallback(() => setError(null), []);
+    return {loading, error, request, clearError}
 };

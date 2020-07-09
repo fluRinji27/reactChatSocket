@@ -1,3 +1,49 @@
-<IfModule mod_headers.c>
-  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; object-src 'self'; style-src 'self' 'unsafe-inline'; img-src *; frame-src 'self'"
+addDefaultCharset UTF-8
+# MIME TYPES
+<IfModule mod_mime.c>
+
+	# DEFAULTS
+	DefaultLanguage en
+	AddLanguage en-US .html .css .js
+	AddCharset utf-8 .html .css .js .xml .json .rss .atom
+
+	# JAVASCRIPT
+	AddType application/javascript js jsonp
+	AddType application/json json
+
+	# FONTS
+	AddType font/opentype otf
+	AddType application/font-woff woff
+	AddType application/x-font-woff woff
+	AddType application/vnd.ms-fontobject eot
+	AddType application/x-font-ttf ttc ttf
+	AddType image/svg+xml svg svgz
+	AddEncoding gzip svgz
+
+	# AUDIO
+	AddType audio/mp4 m4a f4a f4b
+	AddType audio/ogg oga ogg
+
+	# VIDEO
+	AddType video/mp4 mp4 m4v f4v f4p
+	AddType video/ogg ogv
+	AddType video/webm webm
+	AddType video/x-flv flv
+
+	# OTHERS
+	AddType application/octet-stream safariextz
+	AddType application/x-chrome-extension crx
+	AddType application/x-opera-extension oex
+	AddType application/x-shockwave-flash swf
+	AddType application/x-web-app-manifest+json webapp
+	AddType application/x-xpinstall xpi
+	AddType application/xml atom rdf rss xml
+	AddType application/vnd.openxmlformats .docx .pptx .xlsx .xltx . xltm .dotx .potx .ppsx
+	AddType text/cache-manifest appcache manifest
+	AddType text/vtt vtt
+	AddType text/x-component htc
+	AddType text/x-vcard vcf
+	AddType image/webp webp
+	AddType image/x-icon ico
+
 </IfModule>
