@@ -1,27 +1,12 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
+@import "~materialize-css/dist/css/materialize.min.css";
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-body {
-    font-size: 14px;
-    font-family: -apple-system, sans-serif;
-    background-color: #F4F4F4 !important;
-}
 
 .Chat {
-    max-width: 1140px;;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     margin: 5% auto;
     overflow: hidden;
 }
 
-.users {
-    width: 20%;
-}
 
 .users ul {
     list-style: none;
@@ -30,17 +15,14 @@ body {
 .users ul li {
     margin: 5% 5% 5% 0;
     padding-bottom: 20px;
-    border-bottom: 1px solid #E0E0E0;
-    text-align: center;
 }
 
-/*.users ul li*/
-
 .messageBox {
-    width: 80%;
-    height: 40vh;
+    height: 500px;
     padding: 20px;
+    margin: 0 auto !important;
     display: flex;
+    float: none !important;
     flex-direction: column;
     border: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
@@ -61,11 +43,6 @@ body {
     border-radius: 10px;
 }
 
-/*.message p {*/
-/*    max-width: inherit;*/
-/*    !*word-wrap: break-word;*!*/
-/*    white-space: normal*/
-/*}*/
 .message span {
     padding: 5px;
     color: gray;
@@ -76,9 +53,8 @@ body {
     padding: 5%;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
-
     margin: 0 0 0 auto;
+    height: 15%;
 }
 
 .messageInput textarea {
@@ -97,4 +73,12 @@ body {
     border: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
     box-shadow: 2px 2px 2px 4px rgba(214, 214, 214, 0.5);
+}
+
+
+@media (max-width: 400px) {
+    .Chat {
+        display: flex;
+        flex-direction: column;
+    }
 }
