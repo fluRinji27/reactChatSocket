@@ -4,9 +4,9 @@ const socket = require('socket.io');
 const config = require('config');
 const morgan = require('morgan')
 const path = require('path');
-
+// || config.get('PORT')
 //Константа которая получает порт сервера из config
-const PORT = process.env.PORT || config.get('PORT') || 5000;
+const PORT = process.env.PORT || 5000;
 
 //Инициализируем константу нашего сервера
 const app = express();
@@ -108,4 +108,4 @@ const start = async () => {
 
 start();
 
-module.exports.rooms = rooms
+module.exports.rooms = rooms;
