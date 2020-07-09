@@ -66,7 +66,7 @@ const JoinRoom = ({onLogin, socket}) => {
             </div>
             <div className="row input-field__auth">
                 <div className="input-field col  s6">
-                    <input id="icon_telephone" type="tel" className="validate"
+                    <input id="icon_telephone" type="text" className="validate"
                            onChange={e => setUserName(e.target.value)}/>
                     <label htmlFor="icon_telephone">Имя пользователя</label>
                 </div>
