@@ -4,12 +4,19 @@ const socket = require('socket.io');
 const config = require('config');
 const morgan = require('morgan')
 const path = require('path');
-
+const fs = require('fs');
+const https = require('https');
 //Константа которая получает порт сервера из config
 const PORT = process.env.PORT || config.get('PORT') || 5000;
 
+const ssl = {
+    key: fs.readFileSync('./ssl/privateKey.key'),
+    cert: fs.readFileSync('./ssl/certificate.crt')
+};
 //Инициализируем константу нашего сервера
 const app = express();
+
+const httpsServer = https.createServer(ssl, app);
 
 app.use(express.json({extended: true}));
 app.use(express.urlencoded({extended: true}));
@@ -27,10 +34,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //Инициализируем http сервер для сокетов
-const server = require('http').Server(app);
 
 //Инициализируем сокеты
-const io = socket(server);
+const io = socket(httpsServer);
 
 let rooms = new Map();
 const start = async () => {
@@ -96,7 +102,7 @@ const start = async () => {
 
 
         //Прослушка на порт
-        server.listen(PORT, () => console.log('Server has ben started on port: ', PORT));
+        httpsServer.listen(PORT, () => console.log('Server https has ben started on port: ', PORT));
 
 
     } catch
