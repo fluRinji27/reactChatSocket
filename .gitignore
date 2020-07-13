@@ -3,3 +3,7 @@
 
 #production
 /client/build
+config
+.htaccess
+/client/package.json
+/client/package-lock.json

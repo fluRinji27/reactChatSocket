@@ -1,46 +1,43 @@
-* {
-    padding: 0;
-    margin: 0;
+@import "~materialize-css/dist/css/materialize.min.css";
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+body {
+    width: 100%;
+    min-height: 100%;
     box-sizing: border-box;
 }
 
-body {
-    font-size: 14px;
-    font-family: -apple-system, sans-serif;
-    background-color: #F4F4F4 !important;
-}
-
 .Chat {
-    max-width: 1140px;;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 5% auto;
     overflow: hidden;
+    height: 100%;
 }
 
-.users {
-    width: 20%;
+.Main {
+    width: 100%;
+    display: flex;
 }
 
 .users ul {
     list-style: none;
+    position: absolute;
 }
 
 .users ul li {
-    margin: 5% 5% 5% 0;
     padding-bottom: 20px;
-    border-bottom: 1px solid #E0E0E0;
-    text-align: center;
 }
 
-/*.users ul li*/
+.btn_noStyle {
+    border: none;
+    background-color: inherit;
+    color: white;
+}
 
 .messageBox {
-    width: 80%;
-    height: 40vh;
+    height: 500px;
     padding: 20px;
+    margin-left: 0 !important;
     display: flex;
+    float: none !important;
     flex-direction: column;
     border: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
@@ -61,11 +58,6 @@ body {
     border-radius: 10px;
 }
 
-/*.message p {*/
-/*    max-width: inherit;*/
-/*    !*word-wrap: break-word;*!*/
-/*    white-space: normal*/
-/*}*/
 .message span {
     padding: 5px;
     color: gray;
@@ -76,25 +68,61 @@ body {
     padding: 5%;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
-
     margin: 0 0 0 auto;
+    height: 15%;
 }
 
 .messageInput textarea {
-    margin: 0 0 0 auto;
-    padding: 20px;
-    width: 80%;
+    padding: 8px;
+    resize: none;
+    min-height: 12vh;
     border: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
     box-shadow: 2px 2px 2px 4px rgba(214, 214, 214, 0.5);
 }
 
 .messageInput button {
-    width: 20%;
-    margin: 5% auto;
-    height: 45px;
+    /*width: 20%;*/
+    /*margin: 5%;*/
+    /*height: 45px;*/
     border: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
     box-shadow: 2px 2px 2px 4px rgba(214, 214, 214, 0.5);
+}
+
+@media (max-width: 996px) {
+    .Main {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-open-user-modal {
+        margin: 8px;
+    }
+
+    .messageBox {
+        height: 60vh;
+    }
+}
+
+@media (max-width: 450px) {
+    body, h1, h2, h3, h4, h5, h6, p, span, strong {
+        font-size: 0.8rem !important;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .Chat {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .messageInput textarea {
+        margin: 20px auto !important;
+    }
+
+    .messageInput button {
+        width: 40%;
+    }
 }

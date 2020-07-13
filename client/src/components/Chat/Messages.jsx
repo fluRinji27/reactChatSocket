@@ -10,19 +10,20 @@ const Messages = (props) => {
     }, [props.socketMessages]);
 
     return (
-        <div>
+        <React.Fragment>
+            {
+                isLoaded ? messages.map((message, x) => (
 
-            {isLoaded ? messages.map((message, x) => (
+                        <div key={message.userName + x} className='message'>
+                            <p>{message.text}</p>
+                            <span>{message.userName}</span>
+                        </div>
 
-                    <div key={message.userName + x} className='message'>
-                        <p>{message.text}</p>
-                        <span>{message.userName}</span>
-                    </div>
+                    )
+                ) : <h1>No Message</h1>
+            }
+        </React.Fragment>
 
-                )
-            ) : <h1>No Message</h1>}
-
-        </div>
 
     )
 }
