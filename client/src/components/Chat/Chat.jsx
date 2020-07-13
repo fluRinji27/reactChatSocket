@@ -1,15 +1,30 @@
 import React, {useEffect, useRef, useState} from "react";
 
+import Messages from "./Messages"
+import NavBar from "./Navbar/Navbar";
+
+
 import socket from "../../hooks/socket.hook";
 import './style.css'
-import Messages from "./Messages"
+
 
 const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
-    const [textArea, setTextArea] = useState('');
-    const messageRef = useRef(null);
-    const [allMessages, setAllMessages] = useState([]);
+    // Константы
+    const clientWidth = window.outerWidth;
 
+    // Стейты
+    const [textArea, setTextArea] = useState('');
+    const [allMessages, setAllMessages] = useState([]);
+    const [isMobile, setMobile] = useState(false);
+
+    // Ссылки
+    const messageRef = useRef(null);
+
+    // Инициалищация модальных окон
+    window.M.AutoInit();
+
+    // Отправка сообщений
     const onSendMessage = async () => {
         try {
             const message = {
@@ -22,7 +37,6 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
             onAddMessages(message);
             // Оповещам соекеты о новом сообщении
             socket.emit('ROOM:NEW_MESSAGE', message);
-            scrollBottom(messageRef);
             // Очищаем поле ввода
             setTextArea('')
 
@@ -32,53 +46,117 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
     };
 
-    const scrollBottom = (ref) => {
-        let lastDiv;
-        console.log('Scrolling...');
-
-    }
-    console.log(messages);
-    console.log(users);
     useEffect(() => {
 
         // Фокус на последнее сообщение
         messageRef.current.scrollTo = messageRef.scrollHeight
     }, [messages]);
 
+    // Определение устройства пользователя
+    useEffect(() => {
+        window.outerWidth <= 450 ? setMobile(true) : setMobile(false);
+    }, [clientWidth]);
 
     return (
-        <div className="container Chat">
-            <div className="row">
-                <div className="col s12 m2 center-align users">
 
-                    <h5>Комната: {roomId}</h5>
-                    <span>В чате ({users.length}) : </span>
-                    <ul>
-                        {users.map((user, index) => <li key={user + index}>
-                            <div className="chip">
-                                <img src="#" alt="img"/>
-                                <span>{user}</span>
+        <div className="Chat">
+
+            <NavBar roomId={roomId} userName={userName}/>
+
+            <div className="row Main">
+                <div className=" usersContainer">
+                    <div className="col s12 m12 users">
+
+                        <button data-target="modal1" className="btn modal-trigger btn-open-user-modal">Пользователей:
+
+                            {' ' + users.length}
+
+                        </button>
+
+                        <ul className={'userModal hide-on-med-and-down'}>
+
+                            {users.map((user, index) => (
+
+                                    <li key={user + index}>
+
+                                        <div className="chip">
+
+                                            <img src="#" alt=""/>
+
+                                            <span>{user}</span>
+
+                                        </div>
+
+                                    </li>
+                                )
+                            )}
+
+                        </ul>
+                        <div id="modal1" className="modal">
+
+                            <div className="modal-content">
+
+                                <h4>Пользователей: {users.length}</h4>
+
+                                <ul>
+
+                                    {users.map((user, index) => (
+
+                                        <li key={user + index}>
+
+                                            <div className="chip">
+
+                                                <img src="#" alt="img"/>
+
+                                                <span>{user}</span>
+
+                                            </div>
+
+                                        </li>
+                                    ))}
+
+                                </ul>
+
                             </div>
-                        </li>)}
-                    </ul>
-                </div>
-                <div ref={messageRef} className="col s10 messageBox">
 
-                    <Messages allMessages={allMessages} socketMessages={messages}/>
+                            <div className="modal-footer">
 
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
-                <div className="col s12 m6 messageInput">
+
+                <div className="col s12 m12 messageContainer">
+
+                    <div ref={messageRef} className="messageBox">
+
+                        <Messages allMessages={allMessages} socketMessages={messages}/>
+
+                    </div>
+
+                    <div className="col s12 m12  messageInput">
+
                     <textarea placeholder='Введите ваше сообщение.' value={textArea}
                               onChange={e => setTextArea(e.target.value)} cols="30" rows="5">
 
                     </textarea>
-                    <button onClick={onSendMessage}>Оправить</button>
+
+                        <button className={'btn'} onClick={onSendMessage}>Оправить</button>
+
+                    </div>
                 </div>
+
+
             </div>
 
-
         </div>
+
     )
-}
+};
+
 
 export default Chat
+
+

@@ -1,0 +1,9 @@
+.brand-logo {
+    padding-left: 8px !important;
+}
+
+.chip {
+    background-color: #26a69a;
+    color: white;
+    cursor: pointer;
+}
