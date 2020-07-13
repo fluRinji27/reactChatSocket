@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 
 import Messages from "./Messages"
-import NavBar from "./Navbar/Navbar";
+import NavBar from "../Navbar/Navbar";
 
 
 import socket from "../../hooks/socket.hook";
@@ -143,7 +143,8 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
                     </textarea>
 
-                        <button className={'btn'} onClick={onSendMessage}>Оправить</button>
+                        <button className={'btn'} onClick={onSendMessage}><i className={"material-icons right"}>send</i>
+                        </button>
 
                     </div>
                 </div>
