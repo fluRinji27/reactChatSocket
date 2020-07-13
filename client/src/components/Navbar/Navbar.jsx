@@ -16,8 +16,8 @@ export const NavBar = ({roomId, userName}) => {
                         </div>
                     </li>
                     <li>
-                        <button className={"btn_noStyle"}><i
-                            className={"material-icons right"}>exit_to_app</i>
+                        <button className={"btn_noStyle"}>
+                            <i className={"material-icons right"}>exit_to_app</i>
                         </button>
                     </li>
                 </ul>
