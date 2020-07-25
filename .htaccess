@@ -1,8 +1,4 @@
 addDefaultCharset UTF-8
-#Redirect to https
-RewriteCond %{SERVER_PORT} !^443$
-RewriteRule ^(.*)$ https://flurinji.ru/$1 [R=301,L]
-
 # MIME TYPES
 <IfModule mod_mime.c>
 
