@@ -9,7 +9,6 @@ import {useHttp} from "./hooks/http.hook";
 import "materialize-css";
 
 
-
 function App() {
 
     const {request} = useHttp();
@@ -88,5 +87,4 @@ function App() {
     );
 }
 
-// {/**/}
 export default App;

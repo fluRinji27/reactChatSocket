@@ -10,12 +10,8 @@ import './style.css'
 
 const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
-    // Константы
-    const clientWidth = window.outerWidth;
-
     // Стейты
     const [allMessages, setAllMessages] = useState([]);
-    const [isMobile, setMobile] = useState(false);
 
     // Ссылки
     const messageRef = useRef(null);
@@ -43,16 +39,15 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
     };
 
-    useEffect(() => {
+    const scrollMessages = () => {
+        messageRef.current.scrollTo(0, messageRef.current.scrollHeight)
+    };
 
-        // Фокус на последнее сообщение
-        messageRef.current.scrollTo = messageRef.scrollHeight
+    useEffect(() => {
+        // скролл на последнее сообщение
+        scrollMessages()
     }, [messages]);
 
-    // Определение устройства пользователя
-    useEffect(() => {
-        window.outerWidth <= 450 ? setMobile(true) : setMobile(false);
-    }, [clientWidth]);
 
     return (
 
@@ -135,7 +130,6 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
                     <ChatInput onSendMessage={onSendMessage}/>
                 </div>
-
 
             </div>
 
