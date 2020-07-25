@@ -7,3 +7,7 @@ config
 .htaccess
 /client/package.json
 /client/package-lock.json
+ssl
+build
+/client/node_modules
+config

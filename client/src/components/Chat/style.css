@@ -73,6 +73,7 @@ body {
 }
 
 .message p {
+    word-wrap: break-word;
     margin: 0;
 }
 
@@ -83,37 +84,33 @@ body {
 
 .messageInput {
     display: flex;
-    /*padding: 5%;*/
     flex-direction: row;
     height: auto;
-    align-items: flex-end;
-    border-top: none;
+    align-items: center;
+}
+
+.messageInput textarea {
+    padding: 8px;
+    margin: 8px;
+    resize: none;
+    min-height: 36px;
+    border-top: 1px solid rgba(214, 214, 214, 0.5);
     border-right: 1px solid rgba(214, 214, 214, 0.5);
     border-bottom: 1px solid rgba(214, 214, 214, 0.5);
     border-left: 1px solid rgba(214, 214, 214, 0.5);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(214, 214, 214, 0.5);
-}
-
-.messageInput textarea {
-    padding: 8px;
-    resize: none;
-    height: auto;
-    border: none;
     outline: none;
 }
 
 .messageInput textarea::placeholder {
     color: black;
 }
+
 .messageInput button {
-    /*width: 20%;*/
-    /*margin: 5%;*/
-    /*height: 45px;*/
-    /*border: 1px solid rgba(214, 214, 214, 0.5);*/
     border-radius: 35px;
     background-color: #26a69a;
-    /*box-shadow: 2px 2px 2px 4px rgba(214, 214, 214, 0.5);*/
+    margin: 8px 1px;
 }
 
 .messageInput i {

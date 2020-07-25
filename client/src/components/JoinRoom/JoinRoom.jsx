@@ -20,7 +20,6 @@ const JoinRoom = ({onLogin, socket}) => {
     const {request, error, clearError, loading} = useHttp();
 
     useEffect(() => {
-        console.log(error);
         message(error);
         clearError()
     }, [error, message]);
