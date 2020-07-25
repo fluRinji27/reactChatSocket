@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 
 import Messages from "./Messages"
 import NavBar from "../Navbar/Navbar";
-
+import ChatInput from "./ChatInput";
 
 import socket from "../../hooks/socket.hook";
 import './style.css'
@@ -14,7 +14,6 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
     const clientWidth = window.outerWidth;
 
     // Стейты
-    const [textArea, setTextArea] = useState('');
     const [allMessages, setAllMessages] = useState([]);
     const [isMobile, setMobile] = useState(false);
 
@@ -25,7 +24,7 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
     window.M.AutoInit();
 
     // Отправка сообщений
-    const onSendMessage = async () => {
+    const onSendMessage = async (textArea) => {
         try {
             const message = {
                 roomId,
@@ -37,8 +36,6 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
             onAddMessages(message);
             // Оповещам соекеты о новом сообщении
             socket.emit('ROOM:NEW_MESSAGE', message);
-            // Очищаем поле ввода
-            setTextArea('')
 
         } catch (e) {
             throw e
@@ -136,17 +133,7 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
 
                     </div>
 
-                    <div className="col s12 m12  messageInput">
-
-                    <textarea placeholder='Введите ваше сообщение.' value={textArea}
-                              onChange={e => setTextArea(e.target.value)} cols="30" rows="5">
-
-                    </textarea>
-
-                        <button className={'btn'} onClick={onSendMessage}><i className={"material-icons right"}>send</i>
-                        </button>
-
-                    </div>
+                    <ChatInput onSendMessage={onSendMessage}/>
                 </div>
 
 
