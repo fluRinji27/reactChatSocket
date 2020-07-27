@@ -25,7 +25,8 @@
       "http://flurinji.ru"
     ],
     "connect-src": [
-      "'self'"
+      "'self'",
+      "'ws://localhost:3000'"
     ]
   }
 }

@@ -40,11 +40,13 @@ router.post('/join', [
                 let allUsers = rooms.users;
 
                 for (let i = 0; i < rooms.users.length; i++) {
+
                     // Изменяем socket id пользователя
                     if (rooms.users[i].Name === userName && rooms.users[i].socketId !== socketId) {
 
                         //Ищем пользователя в комнате по имени и присваиваем ноывй сокет ид
                         let findUser = allUsers.find(user => user.Name === userName);
+
                         findUser.socketId = socketId;
 
                         // Создаем новуы объект с внесенными изменениями
@@ -64,6 +66,7 @@ router.post('/join', [
 
                     // Если такого имени нету, то создаем объект с новым пользователем и добавляем его в массив пользователей
                     if (!findEdentUser) {
+
                         const newUser = {
                             Name: userName,
                             socketId: socketId

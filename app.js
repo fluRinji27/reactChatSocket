@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
-const morgan = require('morgan')
+const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -35,8 +35,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     })
 }
-
-//Инициализируем http сервер для сокетов
 
 //Инициализируем сокеты
 const io = socket(httpsServer);
