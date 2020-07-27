@@ -74,7 +74,8 @@ const JoinRoom = ({onLogin, socket}) => {
             <div className="row">
                 <button className="btn waves-effect waves-light" disabled={loading} onClick={onJoin}>{loading ?
                     <span>Вход...</span>
-                    : <span>Войти<i className="material-icons right">send</i></span>}</button>
+                    : <span>Войти<i className="material-icons right">send</i></span>}
+                </button>
             </div>
 
 
