@@ -1,8 +1,12 @@
 import React, {useEffect, useReducer, useState} from 'react';
+import {Route, Switch, Redirect} from 'react-router-dom';
+
 
 import JoinRoom from "./components/JoinRoom/JoinRoom";
 import Chat from "./components/Chat/Chat";
 import reducer from "./redux/reducer";
+
+import checkUserAuth from "./hooks/checkUserAuth.hook";
 import socket from "./hooks/socket.hook";
 import {useHttp} from "./hooks/http.hook";
 
@@ -25,9 +29,11 @@ function App() {
 
     const [allMessages, setAllMessages] = useState([])
 
+    const [roomId, setRoomId] = useState(null);
+
     const onLogin = async (userData) => {
         try {
-
+            setRoomId(userData.roomId);
             // Доабвляем в стейт данные о пользователе
             dispatch({
                 type: 'JOINED',
@@ -70,21 +76,34 @@ function App() {
         })
     }
 
+
     useEffect(() => {
         // Фиксируем вход пользователя в комнату
         socket.on('ROOM:SET_USERS', setUsers);
         socket.on('ROOM:NEW_MESSAGE', addMessage)
     }, []);
 
+
     return (
         <div className="App">
 
-            {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> :
-
-                <Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>}
-
+            {// Проверяем авторизован ли пользователь
+                checkUserAuth(state.Joined, roomId)
+            }
+            <Switch>
+                <Route path={`/auth`}>
+                    <JoinRoom onLogin={onLogin} socket={socket}/>
+                </Route>
+                <Route path={`/room/${roomId}`}>
+                    <Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>
+                </Route>
+                <Redirect from={"/"} to={"/auth"}/>
+            </Switch>
         </div>
     );
+}
+
+{/*<Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>*/
 }
 
 export default App;
