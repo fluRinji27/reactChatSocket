@@ -52,71 +52,39 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
     return (
 
         <div className="Chat">
-
             <NavBar roomId={roomId} userName={userName}/>
-
             <div className="row Main">
                 <div className=" usersContainer">
                     <div className="col s12 m12 users">
-
                         <button data-target="modal1" className="btn modal-trigger btn-open-user-modal">Пользователей:
-
                             {' ' + users.length}
-
                         </button>
-
                         <ul className={'userModal hide-on-med-and-down'}>
-
                             {users.map((user, index) => (
-
                                     <li key={user + index}>
-
                                         <div className="chip">
-
                                             <img src="#" alt=""/>
-
                                             <span>{user}</span>
-
                                         </div>
-
                                     </li>
                                 )
                             )}
-
                         </ul>
                         <div id="modal1" className="modal">
-
                             <div className="modal-content">
-
                                 <h4>Пользователей: {users.length}</h4>
-
                                 <ul>
-
                                     {users.map((user, index) => (
-
                                         <li key={user + index}>
-
                                             <div className="chip">
-
                                                 <img src="#" alt="img"/>
-
                                                 <span>{user}</span>
-
                                             </div>
-
                                         </li>
                                     ))}
-
                                 </ul>
-
                             </div>
-
-                            <div className="modal-footer">
-
-                            </div>
-
                         </div>
-
                     </div>
                 </div>
 
