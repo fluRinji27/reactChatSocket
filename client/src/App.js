@@ -1,5 +1,5 @@
 import React, {useEffect, useReducer, useState} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 
 
 import JoinRoom from "./components/JoinRoom/JoinRoom";
@@ -27,7 +27,7 @@ function App() {
 
     });
 
-    const [allMessages, setAllMessages] = useState([])
+    const [allMessages, setAllMessages] = useState([]);
 
     const [roomId, setRoomId] = useState(null);
 
@@ -66,15 +66,25 @@ function App() {
         );
     };
 
+    // Удаляем пользователя из стейта
+    const disconnectUser = () => {
+        dispatch(
+            {
+                type: 'DISCONNECT',
+                payload: null
+            }
+        )
+    };
+
     // Добавляем сообщения в стейт
     const addMessage = messages => {
-        setAllMessages([...state.messages, messages])
+        setAllMessages([...state.messages, messages]);
 
         dispatch({
             type: 'NEW_MESSAGE',
             payload: messages
         })
-    }
+    };
 
 
     useEffect(() => {
@@ -95,7 +105,8 @@ function App() {
                     <JoinRoom onLogin={onLogin} socket={socket}/>
                 </Route>
                 <Route path={`/room/${roomId}`}>
-                    <Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>
+                    <Chat disconnectUser={disconnectUser} {...state} onAddMessages={addMessage}
+                          allMessages={allMessages}/>
                 </Route>
                 <Redirect from={"/"} to={"/auth"}/>
             </Switch>
