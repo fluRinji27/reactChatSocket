@@ -22,7 +22,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://flurinji.ru:80",
+  "proxy": "https://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",

@@ -1,8 +1,12 @@
 import React, {useEffect, useReducer, useState} from 'react';
+import {Redirect, Route, Switch} from 'react-router-dom';
+
 
 import JoinRoom from "./components/JoinRoom/JoinRoom";
 import Chat from "./components/Chat/Chat";
 import reducer from "./redux/reducer";
+
+import checkUserAuth from "./hooks/checkUserAuth.hook";
 import socket from "./hooks/socket.hook";
 import {useHttp} from "./hooks/http.hook";
 
@@ -23,11 +27,13 @@ function App() {
 
     });
 
-    const [allMessages, setAllMessages] = useState([])
+    const [allMessages, setAllMessages] = useState([]);
+
+    const [roomId, setRoomId] = useState(null);
 
     const onLogin = async (userData) => {
         try {
-
+            setRoomId(userData.roomId);
             // Доабвляем в стейт данные о пользователе
             dispatch({
                 type: 'JOINED',
@@ -60,15 +66,26 @@ function App() {
         );
     };
 
+    // Удаляем пользователя из стейта
+    const disconnectUser = () => {
+        dispatch(
+            {
+                type: 'DISCONNECT',
+                payload: null
+            }
+        )
+    };
+
     // Добавляем сообщения в стейт
     const addMessage = messages => {
-        setAllMessages([...state.messages, messages])
+        setAllMessages([...state.messages, messages]);
 
         dispatch({
             type: 'NEW_MESSAGE',
             payload: messages
         })
-    }
+    };
+
 
     useEffect(() => {
         // Фиксируем вход пользователя в комнату
@@ -76,15 +93,28 @@ function App() {
         socket.on('ROOM:NEW_MESSAGE', addMessage)
     }, []);
 
+
     return (
         <div className="App">
 
-            {!state.Joined ? <JoinRoom onLogin={onLogin} socket={socket}/> :
-
-                <Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>}
-
+            {// Проверяем авторизован ли пользователь
+                checkUserAuth(state.Joined, roomId)
+            }
+            <Switch>
+                <Route path={`/auth`}>
+                    <JoinRoom onLogin={onLogin} socket={socket}/>
+                </Route>
+                <Route path={`/room/${roomId}`}>
+                    <Chat disconnectUser={disconnectUser} {...state} onAddMessages={addMessage}
+                          allMessages={allMessages}/>
+                </Route>
+                <Redirect from={"/"} to={"/auth"}/>
+            </Switch>
         </div>
     );
+}
+
+{/*<Chat {...state} onAddMessages={addMessage} allMessages={allMessages}/>*/
 }
 
 export default App;

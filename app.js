@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socket = require('socket.io');
 const config = require('config');
-const morgan = require('morgan')
+const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -33,8 +33,6 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-//Инициализируем http сервер для сокетов
-
 //Инициализируем сокеты
 const io = socket(httpsServer);
 
@@ -53,8 +51,8 @@ const start = async () => {
             let socketUserData;
             // Подключение пользователя к комнате
                 socket.on('ROOM:JOIN', data => {
-                    console.log('user connect', socket.id)
-                    const roomId = data.roomId
+                    console.log('user connect', socket.id);
+                    const roomId = data.roomId;
                     const userName = data.userName;
 
                         socketUserData = data;
@@ -68,7 +66,7 @@ const start = async () => {
                     // Создаем комнату в сокетах
                         socket.join(roomId);
                     // В созданную комнату вносим данные пользователя
-                    rooms.get(roomId).get('users').set(socket.id, userName)
+                    rooms.get(roomId).get('users').set(socket.id, userName);
                     // Получаем внесенные данные
                     const users = [...rooms.get(roomId).get('users').values()];
                     // Оповещаем клиент о входе пользователя
@@ -96,6 +94,19 @@ const start = async () => {
                         socket.to(socketUserData.roomId).broadcast.emit('ROOM:SET_USERS', users)
                     }
                 })
+
+            });
+            // Удаление клиента из комнаты
+            socket.on('ROOM:USER_LEFT', () => {
+                // При отключении клиента удаляем его из комнаты
+                rooms.forEach((value, roomId) => {
+                    if (value.get('users').delete(socket.id)) {
+                        const users = [...rooms.get(roomId).get('users').values()];
+                        // Повоещаем клиет о новом кол-во пользователей
+                        socket.to(socketUserData.roomId).broadcast.emit('ROOM:SET_USERS', users)
+                    }
+                })
+
             })
             }
         );
