@@ -62,6 +62,7 @@ body {
     display: flex;
     min-width: 3%;
     max-width: 70%;
+    min-height: 5vh;
     height: auto;
     /*flex-wrap: wrap;*/
     flex-direction: column;
