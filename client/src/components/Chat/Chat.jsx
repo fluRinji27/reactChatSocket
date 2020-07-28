@@ -8,7 +8,7 @@ import socket from "../../hooks/socket.hook";
 import './style.css'
 
 
-const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
+const Chat = ({disconnectUser, users, messages, userName, roomId, onAddMessages}) => {
 
     // Стейты
     const [allMessages, setAllMessages] = useState([]);
@@ -27,7 +27,7 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
                 userName,
                 text: textArea
             };
-            setAllMessages([...messages, messages])
+            setAllMessages([...messages, messages]);
             //Отправляем сообщение в корневой файл
             onAddMessages(message);
             // Оповещам соекеты о новом сообщении
@@ -52,7 +52,7 @@ const Chat = ({users, messages, userName, roomId, onAddMessages}) => {
     return (
 
         <div className="Chat">
-            <NavBar roomId={roomId} userName={userName}/>
+            <NavBar disconnectUser={disconnectUser} roomId={roomId} userName={userName}/>
             <div className="row Main">
                 <div className=" usersContainer">
                     <div className="col s12 m12 users">
