@@ -8,6 +8,14 @@ export default (state, action) => {
                 userName: action.payload.userName,
                 socketId: action.payload.socketId,
             };
+        case 'DISCONNECT':
+            return {
+                ...state,
+                Joined: false,
+                userName: null,
+                roomId: null,
+                socketId: null,
+            };
         case 'SET_USERS':
             return {
                 ...state,
